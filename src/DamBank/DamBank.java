@@ -16,30 +16,40 @@ import static DamBank.CuentaBancaria.TOTAL_MOVIMIENTOS;
 public class DamBank {
     /** Scanner global para lectura de entrada de usuario en toda la aplicación */
     public static Scanner scanner = new Scanner(System.in);
+    public static final int OPCION_SALIR= 8;
 
     public static void main(String[] args) {
 
         CuentaBancaria cuenta = crearCuenta();
+        ejecutarMenuPrincipal(cuenta);
+        cerrarRecursos();
+    }
 
-        boolean salir = false;
+    public static void ejecutarMenuPrincipal(CuentaBancaria cuenta) {
+        int opcion;
 
-        while (!salir) {
-            mostrarMenu();
-            int opcion = leerOpcion();
+        do {
 
-            switch (opcion) {
-                case 1 -> mostrarDatosCuenta(cuenta);
-                case 2 -> System.out.println("IBAN: " + cuenta.getIban());
-                case 3 -> System.out.println("Titular: " + cuenta.getTitularCuenta());
-                case 4 -> System.out.printf("Saldo actual: %.2f€\n", cuenta.getSaldo());
-                case 5 -> procesarIngreso(cuenta);
-                case 6 -> procesarRetirada(cuenta);
-                case 7 -> cuenta.mostrarMovimientos();
-                case 8 -> salir = true;
-                default -> System.out.println("Opción no válida");
-            }
+            opcion = leerOpcion();
+            procesarOpcion(opcion, cuenta);
+
+        } while (opcion != OPCION_SALIR);
+    }
+
+    public static void procesarOpcion(int opcion, CuentaBancaria cuenta) {
+        switch (opcion) {
+            case 1 -> mostrarDatosCuenta(cuenta);
+            case 2 -> System.out.println("IBAN: " + cuenta.getIban());
+            case 3 -> System.out.println("Titular: " + cuenta.getTitularCuenta());
+            case 4 -> System.out.printf("Saldo actual: %.2f€\n", cuenta.getSaldo());
+            case 5 -> procesarIngreso(cuenta);
+            case 6 -> procesarRetirada(cuenta);
+            case 7 -> cuenta.mostrarMovimientos();
+            case OPCION_SALIR -> System.out.println("Saliendo del sistema...");
+            default -> System.out.println("❌ Opción no válida. Por favor seleccione 1-8");
         }
     }
+
 
     /**
      * Crea una nueva cuenta bancaria validando IBAN y titular mediante entrada de usuario.
@@ -84,10 +94,11 @@ public class DamBank {
         try {
             return scanner.nextInt();
         } catch (InputMismatchException e) {
-            return -1; // Valor inválido
+            return -1;
         } finally {
-            scanner.nextLine(); // Limpiar buffer
+            scanner.nextLine();
         }
+
     }
 
     /**
@@ -136,5 +147,10 @@ public class DamBank {
             System.out.println("Error: Debes introducir un número");
             scanner.nextLine(); //Limpiar buffer
         }
+    }
+
+    private static void cerrarRecursos() {
+        scanner.close();
+        System.out.println("Recursos liberados correctamente");
     }
 }

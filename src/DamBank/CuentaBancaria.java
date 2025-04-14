@@ -17,7 +17,7 @@ public class CuentaBancaria {
      * @throws IllegalArgumentException Si el IBAN es inválido.
      */
 
-    public CuentaBancaria(String iban, String titular) {
+    public CuentaBancaria(String iban, String titular)  {
         if (!validarIBAN(iban)){
             throw new IllegalArgumentException("IBAN no válido");
         }
